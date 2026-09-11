@@ -3,7 +3,8 @@ const router = express.Router();
 
 const {
   getDashboardStats, listBusinesses, adminCreateBusiness, adminGetBusiness,
-  listUsers, getUserDetail, setUserStatus, deleteUser
+  listUsers, getUserDetail, setUserStatus, deleteUser,
+  setBusinessSubscription
 } = require('../controllers/adminController');
 const { setStatus, updateBusiness, deleteBusiness, updateLogo } = require('../controllers/businessController');
 const { getQr } = require('../controllers/qrController');
@@ -24,6 +25,7 @@ router.delete('/businesses/:id', requireBusinessOwnership, deleteBusiness);
 router.put('/businesses/:id/status', requireBusinessOwnership, setStatus);
 router.put('/businesses/:id/logo', requireBusinessOwnership, logoUpload.single('logo'), updateLogo);
 router.get('/businesses/:id/qr', requireBusinessOwnership, getQr);
+router.put('/businesses/:id/subscription', setBusinessSubscription);
 
 router.get('/users', listUsers);
 router.get('/users/:id', getUserDetail);

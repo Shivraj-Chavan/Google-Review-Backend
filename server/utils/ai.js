@@ -44,8 +44,8 @@ async function generateReview(
     );
   }
 
-  const model =
-    process.env.GEMINI_MODEL || "gemini-2.0-flash";
+  // const model =
+  //   process.env.GEMINI_MODEL || "Gemini 3 Flash Live";
 
   const prompt = JSON.stringify({
     business: {
@@ -61,15 +61,17 @@ async function generateReview(
   });
 
   try {
-    const response = await ai.models.generateContent({
-      model,
-      contents: prompt,
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.9,
-        maxOutputTokens: 250,
-      },
-    });
+    const model = "gemini-3.1-flash-lite";
+  
+  const response = await ai.models.generateContent({
+    model,
+    contents: prompt,
+    config: {
+      systemInstruction: SYSTEM_INSTRUCTION,
+      temperature: 0.9,
+      maxOutputTokens: 250,
+    },
+  });
 
     const text = response.text?.trim();
 

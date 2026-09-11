@@ -221,7 +221,34 @@ async function deleteUser(req, res, next) {
   }
 }
 
-module.exports = {
-  getDashboardStats, listBusinesses, adminCreateBusiness, adminGetBusiness,
-  listUsers, getUserDetail, setUserStatus, deleteUser
+
+// PUT /api/admin/businesses/:id/subscription
+async function setBusinessSubscription(req, res)  {
+  try {
+    const { id } = req.params;
+    const { subscription_start_date, subscription_end_date } = req.body;
+
+    if (!subscription_start_date || !subscription_end_date) {
+      return res.status(400).json({ success: false, message: 'Both start and end dates are required' });
+    }
+
+    const [result] = await pool.query(
+      `UPDATE businesses SET subscription_start_date = ?, subscription_end_date = ? WHERE id = ?`,
+      [subscription_start_date, subscription_end_date, id]
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: 'Business not found' });
+    }
+
+    res.json({ success: true, message: 'Subscription updated' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
 };
+
+module.exports = {
+  getDashboardStats, listBusinesses, adminCreateBusiness, adminGetBusiness, 
+  listUsers, getUserDetail, setUserStatus, deleteUser , setBusinessSubscription,
+};
+
+

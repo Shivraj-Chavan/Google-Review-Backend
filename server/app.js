@@ -18,9 +18,63 @@ const analyticsRoutes = require('./routes/analyticsRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
-
 // --- Security & core middleware -------------------------------------------
-app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+app.use(
+  helmet({
+    crossOriginOpenerPolicy: {
+      policy: 'same-origin-allow-popups'
+    },
+
+    crossOriginResourcePolicy: {
+      policy: 'cross-origin'
+    },
+
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+
+        scriptSrc: [
+          "'self'",
+          "https://accounts.google.com"
+        ],
+
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://accounts.google.com"
+        ],
+
+        imgSrc: [
+          "'self'",
+          "data:",
+          "blob:",
+          "https://*.googleusercontent.com",
+          "https://accounts.google.com"
+        ],
+
+        connectSrc: [
+          "'self'",
+          "https://accounts.google.com",
+          "https://oauth2.googleapis.com"
+        ],
+
+        frameSrc: [
+          "'self'",
+          "https://accounts.google.com"
+        ],
+
+        fontSrc: [
+          "'self'",
+          "data:"
+        ],
+
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'", "https://accounts.google.com"]
+      }
+    }
+  })
+);
 app.use(cors({ origin: true, credentials: true })); // TEMP DEBUG — reflects any origin
 app.use(compression());
 app.use(express.json({ limit: '2mb' }));
@@ -48,6 +102,21 @@ app.use('/api/public', publicRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/admin', adminRoutes);
+
+
+const frontendPath = path.join(__dirname, '../public');
+
+app.use(express.static(frontendPath));
+
+// React SPA fallback
+app.get('/{*splat}', (req, res, next) => {
+  // Don't handle API routes here
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
+
+  res.sendFile(path.join(frontendPath, 'index.html'));
+});
 
 app.use(notFound);
 app.use(errorHandler);
