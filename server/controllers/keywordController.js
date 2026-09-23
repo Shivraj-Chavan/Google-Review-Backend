@@ -2,15 +2,28 @@ const { pool } = require('../config/db');
 
 exports.getKeywords = async (req, res) => {
   try {
-    const { id } = req.params; // business id
+    const { id } = req.params;
+
     const [rows] = await pool.query(
       `SELECT id, business_id, keyword, status, created_at, updated_at
-       FROM business_keywords WHERE business_id = ? ORDER BY created_at DESC`,
+       FROM business_keywords
+       WHERE business_id = ?
+       ORDER BY created_at DESC`,
       [id]
     );
-    res.json({ success: true, keywords: rows });
+
+    res.json({
+      success: true,
+      keywords: rows,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    console.error("getKeywords error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
   }
 };
 

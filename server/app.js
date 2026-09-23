@@ -16,6 +16,8 @@ const publicRoutes = require('./routes/publicRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const keywordRoutes = require ('./routes/keywordRoutes');
+const googleBusinessRoutes =require('./routes/googleBusinessRoutes');
 
 const app = express();
 // --- Security & core middleware -------------------------------------------
@@ -102,7 +104,8 @@ app.use('/api/public', publicRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/admin', adminRoutes);
-
+app.use('/api/keywords', keywordRoutes);
+app.use('/api/google-business', googleBusinessRoutes);
 
 const frontendPath = path.join(__dirname, '../public');
 

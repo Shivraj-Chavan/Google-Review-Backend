@@ -9,6 +9,7 @@ const { uploadImage, deleteImage, reorderImages } = require('../controllers/imag
 const { getQr, regenerateQr } = require('../controllers/qrController');
 const { getBusinessAnalytics } = require('../controllers/analyticsController');
 const { getKeywords, addKeyword, updateKeyword, deleteKeyword } = require('../controllers/keywordController');
+const { getAutoReplySettings, updateAutoReplySettings } = require('../controllers/autoReplyController');
 
 const { requireAuth, requireRole, requireBusinessOwnership } = require('../middleware/auth');
 const { logoUpload, galleryUpload } = require('../middleware/upload');
@@ -38,5 +39,8 @@ router.get('/:id/keywords', requireBusinessOwnership, getKeywords);
 router.post('/:id/keywords', requireBusinessOwnership, addKeyword);
 router.put('/:id/keywords/:keywordId', requireBusinessOwnership, updateKeyword);
 router.delete('/:id/keywords/:keywordId', requireBusinessOwnership, deleteKeyword);
+
+router.get('/:id/auto-reply', requireBusinessOwnership, getAutoReplySettings);
+router.put('/:id/auto-reply', requireBusinessOwnership, updateAutoReplySettings);
 
 module.exports = router;
