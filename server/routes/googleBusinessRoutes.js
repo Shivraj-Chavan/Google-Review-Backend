@@ -4,13 +4,14 @@ const router = express.Router();
 
 const {
   connectGoogleBusiness,
-  googleBusinessCallback
+  googleBusinessCallback,
+  getGoogleBusinessStatus,
+  disconnectGoogleBusiness
 } = require('../controllers/googleBusinessController');
 
 const {
   requireAuth
 } = require('../middleware/auth');
-
 
 // Start Google Business Profile OAuth
 router.post(
@@ -18,7 +19,6 @@ router.post(
   requireAuth,
   connectGoogleBusiness
 );
-
 
 // Google OAuth callback
 // IMPORTANT: no requireAuth here.
@@ -28,5 +28,18 @@ router.get(
   googleBusinessCallback
 );
 
+// Get connection status for a business
+router.get(
+  '/status/:businessId',
+  requireAuth,
+  getGoogleBusinessStatus
+);
+
+// Disconnect Google Business Profile
+router.post(
+  '/disconnect',
+  requireAuth,
+  disconnectGoogleBusiness
+);
 
 module.exports = router;
