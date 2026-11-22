@@ -20,6 +20,7 @@ const keywordRoutes = require ('./routes/keywordRoutes');
 const googleBusinessRoutes =require('./routes/googleBusinessRoutes');
 
 const app = express();
+app.set("trust proxy", 1);
 // --- Security & core middleware -------------------------------------------
 app.use(
   helmet({

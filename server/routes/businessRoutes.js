@@ -41,6 +41,6 @@ router.put('/:id/keywords/:keywordId', requireBusinessOwnership, updateKeyword);
 router.delete('/:id/keywords/:keywordId', requireBusinessOwnership, deleteKeyword);
 
 router.get('/:id/auto-reply', requireBusinessOwnership, getAutoReplySettings);
-router.put('/:id/auto-reply', requireBusinessOwnership, updateAutoReplySettings);
+router.put('/:id/auto-reply', requireBusinessOwnership,updateAutoReplySettings);
 
 module.exports = router;

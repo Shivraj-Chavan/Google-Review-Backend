@@ -29,6 +29,11 @@ async function generateAiReview(req, res, next) {
 
       let review;
     try {
+      console.log('[AI INPUT]', {
+        rating,
+        selectedPoints: safePoints,
+        customerFeedback: safeFeedback
+      });
       review = await generateReview({
         businessName: business.business_name,
         category: business.category,
