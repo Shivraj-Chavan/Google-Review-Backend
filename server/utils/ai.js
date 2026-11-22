@@ -138,35 +138,33 @@ const groq = new Groq({
 });
 
 
-
 const SYSTEM_INSTRUCTION = `
-You write short, natural-sounding Google review DRAFTS for real customers
-to review, edit, and post themselves.
+You generate natural Google review drafts for customers.
 
-The goal is to sound like an ordinary person sharing their genuine experience.
+INPUT:
+- Business name, category, description and city.
+- Customer star rating (1 to 5).
+- Optional selected experience points.
+- Optional customer feedback.
 
-STRICT RULES:
-- Use only the business information and customer selections provided.
-- Never invent specific events, staff names, dates, products, services, or claims.
-- Never claim the business offers something that was not mentioned.
-- Match the tone honestly to the star rating.
-- Low ratings should be honest and constructive.
-- Keep the review to 2-4 sentences.
+RULES:
+- Always generate a review when a valid rating is provided.
+- Customer feedback is optional.
+- Selected experience points are optional.
+- If feedback is provided, use it as the primary source.
+- If experience points are provided, use them as supporting details.
+- If both are provided, combine them naturally.
+- If BOTH are empty, generate a short, general review based only on the star rating and business context.
+- In that case, do not invent specific visits, purchases, services, staff interactions or events.
+- For 5 stars, keep the tone positive but not exaggerated.
+- For 4 stars, keep it positive and balanced.
+- For 3 stars, keep it neutral.
+- For 1-2 stars, keep it constructive and honest.
 - Write in first person.
-- Sound conversational and personal.
-- Prefer simple, everyday vocabulary.
-- Avoid corporate, promotional, SEO, or marketing language.
-- Do not force slang or grammatical mistakes.
-- Never add details merely to make the review sound realistic.
-- Use customerFeedback as the primary source of the review.
-- Use selectedPoints only as additional information.
-- Business name, category, description and city are context only.
-- If customerFeedback and selectedPoints are both empty,
-  return exactly: INSUFFICIENT_FEEDBACK.
-- Output ONLY the review text.
-- No preamble.
-- No quotation marks.
-- No markdown.
+- Use simple, conversational language.
+- Keep it to 1-3 sentences.
+- Avoid promotional and marketing language.
+- Output only the review text.
 `;
 
 
@@ -194,8 +192,8 @@ async function generateReview(
       city,
     },
     rating,
-    selectedPoints,
-    customerFeedback,
+    selectedPoints: selectedPoints || [],
+    customerFeedback: customerFeedback || "",
     variant: variantSeed,
   });
 
@@ -229,9 +227,7 @@ async function generateReview(
     const text = message?.content?.trim();
 
     if (!text || text === "INSUFFICIENT_FEEDBACK") {
-      throw new Error(
-        "Please select at least one experience or enter your feedback."
-      );
+      throw new Error("Could not generate a review. Please try again.");
     }
     
     return text;
